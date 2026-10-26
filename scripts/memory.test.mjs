@@ -8,7 +8,7 @@ async function loadModule(path) {
   }).outputText
   return import(`data:text/javascript;base64,${Buffer.from(output).toString('base64')}`)
 }
-const { memoryStats, filterMemoryPairs, pairErrorCount, makePairs } = await loadModule('src/pairs.ts')
+const { memoryStats, filterMemoryPairs, pairErrorCount, makePairs, memoryCards } = await loadModule('src/pairs.ts')
 const { restoreMistakeCounts } = await loadModule('src/progress.ts')
 const word = (id, correct) => ({ id, correct, word: correct.toLowerCase(), stressIndex: [...correct].findIndex(c => /[АЕЁИОУЫЭЮЯ]/.test(c)) })
 const a = word('a', 'ногтЕй'), phrase = word('phrase', 'для ногтЕй'), b = word('b', 'новостЕй')
@@ -49,5 +49,33 @@ describe('memory filters and progress compatibility', () => {
     const restored = restoreMistakeCounts({ a: 3, b: -1, c: '4', d: 2.5, removed: 100 }, new Set(words.map(w => w.id)))
     assert.deepEqual(restored, { a: 3 })
     assert.deepEqual(restoreMistakeCounts([], new Set(['a'])), {})
+  })
+  it('shows дешевИзна as a single card when no matching pair exists', () => {
+    const actualWords = JSON.parse(readFileSync('src/words.json', 'utf8')).words
+    const cheapness = actualWords.find(w => w.word === 'дешевизна')
+    const actualPairs = makePairs(actualWords)
+    const stats = memoryStats(actualWords, { [cheapness.id]: 2 }, [cheapness.id])
+    for (const filter of ['mistakes', 'frequent']) {
+      const cards = memoryCards(actualWords, actualPairs, filter, stats)
+      assert.equal(cards.length, 1)
+      assert.equal(cards[0].a.correct, 'дешевИзна')
+      assert.equal(cards[0].b, undefined)
+      assert.equal(pairErrorCount(cards[0], stats), 2)
+    }
+    assert.ok(memoryCards(actualWords, actualPairs, 'all', stats).every(card => card.b))
+  })
+  it('mixes pairs and unpaired errors by count and preserves legacy single-word marks', () => {
+    const lone = word('lone', 'тУфля')
+    const allWords = [...words, lone]
+    const stats = memoryStats(allWords, { a: 1, lone: 5 }, ['a', 'lone'])
+    const cards = memoryCards(allWords, makePairs(allWords), 'frequent', stats)
+    assert.equal(cards[0].a.id, 'lone')
+    assert.equal(cards[0].b, undefined)
+    assert.equal(cards.length, 2)
+    const legacyStats = memoryStats(allWords, {}, ['lone'])
+    assert.equal(memoryCards(allWords, makePairs(allWords), 'mistakes', legacyStats)[0].a.id, 'lone')
+    const clearedStats = memoryStats(allWords, { lone: 5 }, [])
+    assert.equal(memoryCards(allWords, makePairs(allWords), 'mistakes', clearedStats).length, 0)
+    assert.equal(memoryCards(allWords, makePairs(allWords), 'frequent', clearedStats).length, 1)
   })
 })
