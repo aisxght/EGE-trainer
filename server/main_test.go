@@ -13,8 +13,13 @@ func TestWordsEndpoint(t *testing.T) {
 	if w.Code != 200 { t.Fatalf("status = %d", w.Code) }
 	var data struct { Words []struct { Word string `json:"word"` } `json:"words"`; TotalRows int `json:"totalRows"` }
 	if err := json.Unmarshal(w.Body.Bytes(), &data); err != nil { t.Fatal(err) }
-	if len(data.Words) != 207 || data.TotalRows != 720 { t.Fatalf("unexpected dataset: %d words, %d rows", len(data.Words), data.TotalRows) }
-	for _, word := range data.Words { if word.Word == "послала" || word.Word == "запломбировать" { t.Fatal("conflicting word exposed in quiz dataset") } }
+	if len(data.Words) != 208 || data.TotalRows != 720 { t.Fatalf("unexpected dataset: %d words, %d rows", len(data.Words), data.TotalRows) }
+	foundCorrected := false
+	for _, word := range data.Words {
+		if word.Word == "послала" { t.Fatal("conflicting word exposed in quiz dataset") }
+		if word.Word == "запломбировать" { foundCorrected = true }
+	}
+	if !foundCorrected { t.Fatal("user-confirmed correction missing from quiz dataset") }
 }
 
 func TestUnknownApiAndMethod(t *testing.T) {

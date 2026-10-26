@@ -54,35 +54,6 @@
           ]
         }
       ]
-    },
-    {
-      "word": "запломбировать",
-      "variants": [
-        {
-          "correct": "запломбировАть",
-          "sources": [
-            {
-              "file": "ege_udarenia_2023_2026_obshchaya.md",
-              "line": 716,
-              "year": "2025",
-              "variant": "29",
-              "given": "запломбировАть"
-            }
-          ]
-        },
-        {
-          "correct": "запломбИровать",
-          "sources": [
-            {
-              "file": "ege_udarenia_2023_2026_obshchaya.md",
-              "line": 974,
-              "year": "2026",
-              "variant": "29",
-              "given": "запломбИровать"
-            }
-          ]
-        }
-      ]
     }
   ],
   "words": [
@@ -1563,6 +1534,29 @@
           "year": "2026",
           "variant": "13",
           "given": "запЁртый (дом)"
+        }
+      ]
+    },
+    {
+      "id": "0LfQsNC_0LvQvtC80LHQuNGA0L7QstCw0YLRjHw",
+      "word": "запломбировать",
+      "correct": "запломбировАть",
+      "context": "",
+      "stressIndex": 11,
+      "sources": [
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 716,
+          "year": "2025",
+          "variant": "29",
+          "given": "запломбировАть"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 974,
+          "year": "2026",
+          "variant": "29",
+          "given": "запломбировАть"
         }
       ]
     },

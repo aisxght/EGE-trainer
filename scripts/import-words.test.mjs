@@ -46,9 +46,15 @@ describe('trusted Markdown import', () => {
     const value = compileSources([source(readFileSync(`data/${name}`, 'utf8'), name)])
     const previous = compileSources([source(readFileSync('data/archive/ege_udarenia_2025_2026.md', 'utf8'))])
     assert.equal(value.totalRows, 720)
-    assert.equal(value.words.length, 207)
+    assert.equal(value.words.length, 208)
     assert.deepEqual([...new Set(value.words.flatMap(w => w.sources.map(s => s.year)))].sort(), ['2023', '2024', '2025', '2026'])
-    assert.deepEqual(value.conflicts.map(c => c.word).sort(), ['запломбировать', 'послала'])
+    assert.deepEqual(value.conflicts.map(c => c.word).sort(), ['послала'])
+    const corrected = value.words.find(w => w.word === 'запломбировать')
+    assert.equal(corrected.correct, 'запломбировАть')
+    assert.deepEqual(corrected.sources.map(s => [s.year, s.variant, s.given]), [
+      ['2025', '29', 'запломбировАть'],
+      ['2026', '29', 'запломбировАть'],
+    ])
     for (const word of previous.words) {
       const updated = value.words.find(w => w.id === word.id)
       assert.ok(updated, `Lost word: ${word.correct}`)
