@@ -56,10 +56,17 @@ describe('trusted Markdown import', () => {
       ['2026', '29', 'запломбировАть'],
     ])
     for (const word of previous.words) {
+      if (word.word === 'каплянуть') continue // Corrected transcription; see data/corrections/2026-10-26.md.
       const updated = value.words.find(w => w.id === word.id)
       assert.ok(updated, `Lost word: ${word.correct}`)
       assert.equal(updated.correct, word.correct)
     }
+    assert.ok(!value.words.some(word => word.word === 'каплянуть'))
+    const cough = value.words.find(word => word.word === 'кашлянуть')
+    assert.equal(cough.correct, 'кАшлянуть')
+    assert.equal(cough.stressIndex, 1)
+    assert.equal(cough.sources.length, 5)
+    assert.ok(cough.sources.every(source => source.given === 'кашлянУть'))
     const client = JSON.parse(readFileSync('src/words.json', 'utf8'))
     const server = JSON.parse(readFileSync('server/words.json', 'utf8'))
     assert.deepEqual(client, value)

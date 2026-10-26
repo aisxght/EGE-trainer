@@ -1940,50 +1940,6 @@
       ]
     },
     {
-      "id": "0LrQsNC_0LvRj9C90YPRgtGMfA",
-      "word": "каплянуть",
-      "correct": "каплЯнуть",
-      "context": "",
-      "stressIndex": 4,
-      "sources": [
-        {
-          "file": "ege_udarenia_2023_2026_obshchaya.md",
-          "line": 40,
-          "year": "2023",
-          "variant": "5",
-          "given": "каплянУть"
-        },
-        {
-          "file": "ege_udarenia_2023_2026_obshchaya.md",
-          "line": 292,
-          "year": "2024",
-          "variant": "5",
-          "given": "каплянУть"
-        },
-        {
-          "file": "ege_udarenia_2023_2026_obshchaya.md",
-          "line": 606,
-          "year": "2025",
-          "variant": "13",
-          "given": "каплянУть"
-        },
-        {
-          "file": "ege_udarenia_2023_2026_obshchaya.md",
-          "line": 864,
-          "year": "2026",
-          "variant": "13",
-          "given": "каплянУть"
-        },
-        {
-          "file": "ege_udarenia_2023_2026_obshchaya.md",
-          "line": 969,
-          "year": "2026",
-          "variant": "28",
-          "given": "каплянУть"
-        }
-      ]
-    },
-    {
       "id": "0LrQsNGC0LDQu9C-0LN8",
       "word": "каталог",
       "correct": "каталОг",
@@ -2024,6 +1980,50 @@
           "year": "2026",
           "variant": "32",
           "given": "каталОг"
+        }
+      ]
+    },
+    {
+      "id": "0LrQsNGI0LvRj9C90YPRgtGMfA",
+      "word": "кашлянуть",
+      "correct": "кАшлянуть",
+      "context": "",
+      "stressIndex": 1,
+      "sources": [
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 40,
+          "year": "2023",
+          "variant": "5",
+          "given": "кашлянУть"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 292,
+          "year": "2024",
+          "variant": "5",
+          "given": "кашлянУть"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 606,
+          "year": "2025",
+          "variant": "13",
+          "given": "кашлянУть"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 864,
+          "year": "2026",
+          "variant": "13",
+          "given": "кашлянУть"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 969,
+          "year": "2026",
+          "variant": "28",
+          "given": "кашлянУть"
         }
       ]
     },

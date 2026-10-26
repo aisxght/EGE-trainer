@@ -21,7 +21,10 @@ const fresh: Progress = { answers: 0, correct: 0, learned: [], mistakes: [], day
 function restore(): Progress {
   try {
     const value = JSON.parse(localStorage.getItem('tochka-progress-v1') || 'null')
-    if (value && Number.isFinite(value.answers) && Number.isFinite(value.correct) && Array.isArray(value.learned) && Array.isArray(value.mistakes) && value.days && typeof value.days === 'object') return { ...fresh, ...value }
+    if (value && Number.isFinite(value.answers) && Number.isFinite(value.correct) && Array.isArray(value.learned) && Array.isArray(value.mistakes) && value.days && typeof value.days === 'object') {
+      const validIds = new Set(database.value.words.map(word => word.id))
+      return { ...fresh, ...value, learned: value.learned.filter((id: string) => validIds.has(id)), mistakes: value.mistakes.filter((id: string) => validIds.has(id)) }
+    }
   } catch { /* A restricted or full storage must not prevent practice. */ }
   return fresh
 }
