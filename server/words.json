@@ -4773,9 +4773,9 @@
     {
       "id": "0L_Qu9C-0LzQsdC40YDQvtCy0LDRgtGMfA",
       "word": "пломбировать",
-      "correct": "пломбирОвать",
+      "correct": "пломбировАть",
       "context": "",
-      "stressIndex": 7,
+      "stressIndex": 9,
       "sources": [
         {
           "file": "ege_udarenia_2023_2026_obshchaya.md",

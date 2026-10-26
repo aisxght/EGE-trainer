@@ -59,7 +59,7 @@ describe('trusted Markdown import', () => {
       if (word.word === 'каплянуть') continue // Corrected transcription; see data/corrections/2026-10-26.md.
       const updated = value.words.find(w => w.id === word.id)
       assert.ok(updated, `Lost word: ${word.correct}`)
-      assert.equal(updated.correct, word.correct)
+      assert.equal(updated.correct, word.word === 'пломбировать' ? 'пломбировАть' : word.correct)
     }
     assert.ok(!value.words.some(word => word.word === 'каплянуть'))
     const cough = value.words.find(word => word.word === 'кашлянуть')
@@ -67,6 +67,13 @@ describe('trusted Markdown import', () => {
     assert.equal(cough.stressIndex, 1)
     assert.equal(cough.sources.length, 5)
     assert.ok(cough.sources.every(source => source.given === 'кашлянУть'))
+    const seal = value.words.find(word => word.word === 'пломбировать')
+    assert.equal(seal.correct, 'пломбировАть')
+    assert.deepEqual(seal.sources.map(source => [source.year, source.variant]), [
+      ['2023', '13'], ['2024', '13'], ['2026', '20'],
+    ])
+    const variant13 = parseSource(readFileSync(`data/${name}`, 'utf8'), name).entries.filter(entry => entry.source.year === '2026' && entry.source.variant === '13')
+    assert.deepEqual(variant13.map(entry => entry.source.given), ['катАлог', 'запЁртый (дом)', 'кашлянУть', 'вручАт', 'звонИт'])
     const client = JSON.parse(readFileSync('src/words.json', 'utf8'))
     const server = JSON.parse(readFileSync('server/words.json', 'utf8'))
     assert.deepEqual(client, value)
