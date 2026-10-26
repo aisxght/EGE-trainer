@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.cache/
+*.exe
+*.tsbuildinfo
+*.log
+preview.png
+.env
+.env.*
+!.env.example
