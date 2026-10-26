@@ -5,6 +5,7 @@ export interface Word { id: string; word: string; correct: string; context: stri
 export const database = ref(bundled)
 export const dataMode = ref('local')
 export async function loadWords() {
+  if (import.meta.env.VITE_STATIC_HOSTING === 'true') return
   try {
     const response = await fetch('/api/words', { signal: AbortSignal.timeout(2500) })
     if (!response.ok) return
