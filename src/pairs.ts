@@ -26,3 +26,30 @@ export function makePairs<T extends PairWord>(words: T[]) {
     return unique.slice(0, -1).map((word, i) => ({ id: `${word.id}-${unique[i + 1].id}`, a: word, b: unique[i + 1], tail }))
   })
 }
+
+export type MemoryFilter = 'all' | 'mistakes' | 'frequent'
+export interface MemoryStat { count: number; current: boolean; legacy: boolean }
+export function memoryStats(words: PairWord[], counts: Record<string, number>, mistakes: string[]): Map<string, MemoryStat> {
+  const stats = new Map<string, MemoryStat>()
+  const current = new Set(mistakes)
+  for (const word of words) {
+    const key = stressedWord(word)
+    const stat = stats.get(key) || { count: 0, current: false, legacy: false }
+    stat.count += counts[word.id] || 0
+    stat.current ||= current.has(word.id)
+    stat.legacy ||= current.has(word.id) && !counts[word.id]
+    stats.set(key, stat)
+  }
+  return stats
+}
+export function pairErrorCount(pair: { a: PairWord; b: PairWord }, stats: Map<string, MemoryStat>): number {
+  return (stats.get(stressedWord(pair.a))?.count || 0) + (stats.get(stressedWord(pair.b))?.count || 0)
+}
+export function filterMemoryPairs<T extends { a: PairWord; b: PairWord }>(pairs: T[], filter: MemoryFilter, stats: Map<string, MemoryStat>): T[] {
+  if (filter === 'all') return [...pairs]
+  const relevant = pairs.filter(pair => [pair.a, pair.b].some(word => {
+    const stat = stats.get(stressedWord(word))
+    return stat?.current || (filter === 'frequent' && (stat?.count || 0) > 0)
+  }))
+  return filter === 'frequent' ? relevant.sort((a, b) => pairErrorCount(b, stats) - pairErrorCount(a, stats)) : relevant
+}
