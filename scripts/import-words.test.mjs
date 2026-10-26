@@ -46,9 +46,17 @@ describe('trusted Markdown import', () => {
     const value = compileSources([source(readFileSync(`data/${name}`, 'utf8'), name)])
     const previous = compileSources([source(readFileSync('data/archive/ege_udarenia_2025_2026.md', 'utf8'))])
     assert.equal(value.totalRows, 720)
-    assert.equal(value.words.length, 208)
+    assert.equal(value.words.length, 209)
     assert.deepEqual([...new Set(value.words.flatMap(w => w.sources.map(s => s.year)))].sort(), ['2023', '2024', '2025', '2026'])
-    assert.deepEqual(value.conflicts.map(c => c.word).sort(), ['послала'])
+    assert.deepEqual(value.conflicts, [])
+    const informed = value.words.find(w => w.word === 'осведомиться')
+    assert.equal(informed.correct, 'освЕдомиться')
+    assert.equal(informed.stressIndex, 3)
+    assert.equal(informed.sources.length, 3)
+    const sent = value.words.find(w => w.word === 'послала')
+    assert.equal(sent.correct, 'послАла')
+    assert.equal(sent.stressIndex, 4)
+    assert.equal(sent.sources.length, 5)
     const corrected = value.words.find(w => w.word === 'запломбировать')
     assert.equal(corrected.correct, 'запломбировАть')
     assert.deepEqual(corrected.sources.map(s => [s.year, s.variant, s.given]), [
@@ -59,7 +67,8 @@ describe('trusted Markdown import', () => {
       if (word.word === 'каплянуть') continue // Corrected transcription; see data/corrections/2026-10-26.md.
       const updated = value.words.find(w => w.id === word.id)
       assert.ok(updated, `Lost word: ${word.correct}`)
-      assert.equal(updated.correct, word.word === 'пломбировать' ? 'пломбировАть' : word.correct)
+      const corrections = { 'пломбировать': 'пломбировАть', 'осведомиться': 'освЕдомиться' }
+      assert.equal(updated.correct, corrections[word.word] ?? word.correct)
     }
     assert.ok(!value.words.some(word => word.word === 'каплянуть'))
     const cough = value.words.find(word => word.word === 'кашлянуть')

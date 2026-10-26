@@ -21,8 +21,8 @@ describe('quiz selection and rounds', () => {
   })
   it('returns every word exactly once for a full round, regardless of previous filter', () => {
     const result = createRound(words, 'mistakes', 'all', [])
-    assert.equal(result.length, 208)
-    assert.equal(new Set(result.map(w => w.id)).size, 208)
+    assert.equal(result.length, words.length)
+    assert.equal(new Set(result.map(w => w.id)).size, words.length)
     assert.deepEqual(result.map(w => w.id).sort(), words.map(w => w.id).sort())
   })
   it('uses every word in an endless round and prevents immediate boundary repeats', () => {

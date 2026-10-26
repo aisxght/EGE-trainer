@@ -4,58 +4,7 @@
     "ege_udarenia_2023_2026_obshchaya.md"
   ],
   "totalRows": 720,
-  "conflicts": [
-    {
-      "word": "послала",
-      "variants": [
-        {
-          "correct": "послАла",
-          "sources": [
-            {
-              "file": "ege_udarenia_2023_2026_obshchaya.md",
-              "line": 109,
-              "year": "2023",
-              "variant": "15",
-              "given": "послалА"
-            },
-            {
-              "file": "ege_udarenia_2023_2026_obshchaya.md",
-              "line": 363,
-              "year": "2024",
-              "variant": "15",
-              "given": "послалА"
-            },
-            {
-              "file": "ege_udarenia_2023_2026_obshchaya.md",
-              "line": 619,
-              "year": "2025",
-              "variant": "15",
-              "given": "послалА"
-            },
-            {
-              "file": "ege_udarenia_2023_2026_obshchaya.md",
-              "line": 877,
-              "year": "2026",
-              "variant": "15",
-              "given": "послалА"
-            }
-          ]
-        },
-        {
-          "correct": "послалА",
-          "sources": [
-            {
-              "file": "ege_udarenia_2023_2026_obshchaya.md",
-              "line": 578,
-              "year": "2025",
-              "variant": "9",
-              "given": "послалА"
-            }
-          ]
-        }
-      ]
-    }
-  ],
+  "conflicts": [],
   "words": [
     {
       "id": "0LDRgtC80L7RgdGE0LXRgHw",
@@ -4351,9 +4300,9 @@
     {
       "id": "0L7RgdCy0LXQtNC-0LzQuNGC0YzRgdGPfA",
       "word": "осведомиться",
-      "correct": "осведомИться",
+      "correct": "освЕдомиться",
       "context": "",
-      "stressIndex": 7,
+      "stressIndex": 3,
       "sources": [
         {
           "file": "ege_udarenia_2023_2026_obshchaya.md",
@@ -5271,6 +5220,50 @@
           "year": "2026",
           "variant": "9",
           "given": "пОручни"
+        }
+      ]
+    },
+    {
+      "id": "0L_QvtGB0LvQsNC70LB8",
+      "word": "послала",
+      "correct": "послАла",
+      "context": "",
+      "stressIndex": 4,
+      "sources": [
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 109,
+          "year": "2023",
+          "variant": "15",
+          "given": "послалА"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 363,
+          "year": "2024",
+          "variant": "15",
+          "given": "послалА"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 578,
+          "year": "2025",
+          "variant": "9",
+          "given": "послалА"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 619,
+          "year": "2025",
+          "variant": "15",
+          "given": "послалА"
+        },
+        {
+          "file": "ege_udarenia_2023_2026_obshchaya.md",
+          "line": 877,
+          "year": "2026",
+          "variant": "15",
+          "given": "послалА"
         }
       ]
     },

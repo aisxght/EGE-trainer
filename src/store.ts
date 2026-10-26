@@ -3,7 +3,14 @@ import bundled from './words.json'
 import { restoreMistakeCounts } from './progress'
 
 export interface Word { id: string; word: string; correct: string; context: string; stressIndex: number; sources: { file: string; line: number; year: string; variant: string; given: string }[] }
-export const database = ref(bundled)
+interface WordDatabase {
+  version: number
+  sourceFiles: string[]
+  totalRows: number
+  conflicts: { word: string; variants: { correct: string; sources: Word['sources'] }[] }[]
+  words: Word[]
+}
+export const database = ref<WordDatabase>(bundled)
 export const dataMode = ref('local')
 export async function loadWords() {
   if (import.meta.env.VITE_STATIC_HOSTING === 'true') return
