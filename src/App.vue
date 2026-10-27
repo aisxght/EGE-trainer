@@ -10,8 +10,9 @@ onMounted(loadWords)
 </script>
 
 <template>
-  <v-app>
-    <aside class="sidebar" :class="{ 'is-open': menu }">
+  <v-app @keydown.esc="menu = false">
+    <aside id="main-navigation" class="sidebar" :class="{ 'is-open': menu }" aria-label="Главное меню">
+      <v-btn class="mobile-menu sidebar-close" icon="mdi-close" variant="text" aria-label="Закрыть меню" @click="menu = false" />
       <div class="brand-caption">РУССКИЙ ЯЗЫК · ЕГЭ</div>
       <div class="nav-label">ТВОЁ ПРОСТРАНСТВО</div>
       <nav><router-link v-for="link in links" :key="link.to" :to="link.to" class="nav-item" :class="{ active: route.path === link.to }" @click="menu = false"><v-icon :icon="link.icon" size="21" />{{ link.label }}<span v-if="link.to === '/quiz'" class="nav-new">GO</span></router-link></nav>
@@ -20,7 +21,7 @@ onMounted(loadWords)
     </aside>
     <div v-if="menu" class="nav-backdrop" @click="menu = false"></div>
     <div class="main-shell">
-      <header class="topbar"><div class="topbar-title"><v-btn class="mobile-menu" icon="mdi-menu" variant="text" aria-label="Открыть меню" @click="menu = !menu" /><span>{{ title }}</span></div><div class="topbar-right"><span class="exam-badge"><span></span>Готовимся к ЕГЭ</span><span class="avatar">Я</span></div></header>
+      <header class="topbar"><div class="topbar-title"><v-btn class="mobile-menu" icon="mdi-menu" variant="text" aria-label="Открыть меню" :aria-expanded="menu" aria-controls="main-navigation" @click="menu = !menu" /><span>{{ title }}</span></div><div class="topbar-right"><span class="exam-badge"><span></span>Готовимся к ЕГЭ</span><span class="avatar">Я</span></div></header>
       <main><router-view /></main>
       <footer><span>Место, где всё становится понятнее.</span><span>Сделано для твоей подготовки <span class="footer-flower">✳</span></span></footer>
     </div>

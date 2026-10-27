@@ -8,7 +8,7 @@ async function loadModule(path) {
   }).outputText
   return import(`data:text/javascript;base64,${Buffer.from(output).toString('base64')}`)
 }
-const { memoryStats, filterMemoryPairs, pairErrorCount, makePairs, memoryCards } = await loadModule('src/pairs.ts')
+const { memoryStats, filterMemoryPairs, pairErrorCount, makePairs, memoryCards, matchesMemoryPrefix, restoreMemorySelection, selectedMemoryCards } = await loadModule('src/pairs.ts')
 const { restoreMistakeCounts } = await loadModule('src/progress.ts')
 const word = (id, correct) => ({ id, correct, word: correct.toLowerCase(), stressIndex: [...correct].findIndex(c => /[АЕЁИОУЫЭЮЯ]/.test(c)) })
 const a = word('a', 'ногтЕй'), phrase = word('phrase', 'для ногтЕй'), b = word('b', 'новостЕй')
@@ -17,6 +17,38 @@ const words = [a, phrase, b, c, d, e, f]
 const pairs = [{ id: 'ab', a, b }, { id: 'cd', a: c, b: d }, { id: 'ef', a: e, b: f }]
 
 describe('memory filters and progress compatibility', () => {
+  it('suggests only prefix matches, ignoring case and the ё/е distinction', () => {
+    assert.ok(matchesMemoryPrefix('дешевизна', ' ДЕШ '))
+    assert.ok(matchesMemoryPrefix('поделённый', 'поделе'))
+    assert.equal(matchesMemoryPrefix('подешеветь', 'деш'), false)
+    assert.equal(matchesMemoryPrefix('дешевизна', 'несуществующее'), false)
+  })
+  it('restores only unique existing database IDs from saved selection', () => {
+    assert.deepEqual(restoreMemorySelection(['a', 'a', 'unknown', null, 'b'], words), ['a', 'b'])
+    assert.deepEqual(restoreMemorySelection({ a: true }, words), [])
+  })
+  it('trains selected words regardless of mistakes, retaining context and unpaired words', () => {
+    const actualWords = JSON.parse(readFileSync('src/words.json', 'utf8')).words
+    const cheapness = actualWords.find(w => w.word === 'дешевизна')
+    const review = actualWords.find(w => w.word === 'отзыв' && w.context === 'о книге')
+    const cards = selectedMemoryCards(actualWords, [cheapness.id, review.id, 'unknown'])
+    assert.equal(cards.length, 2)
+    assert.equal(cards[0].a.id, cheapness.id)
+    assert.equal(cards[0].b, undefined)
+    assert.equal(cards[1].a.id, review.id)
+    assert.equal(cards[1].a.context, 'о книге')
+    assert.deepEqual(selectedMemoryCards(actualWords, []), [])
+  })
+  it('prefers selected partners without pairing identical words or losing selected IDs', () => {
+    const cards = selectedMemoryCards(words, ['a', 'b'])
+    assert.equal(cards.length, 1)
+    assert.equal(cards[0].a.id, 'a')
+    assert.equal(cards[0].b.id, 'b')
+    const phraseCards = selectedMemoryCards(words, ['phrase'])
+    assert.equal(phraseCards[0].a.id, 'phrase')
+    assert.equal(phraseCards[0].b.id, 'b')
+    assert.ok(selectedMemoryCards(words, words.map(w => w.id)).every(card => !card.b || card.a.word !== card.b.word))
+  })
   it('preserves old mistake marks without inventing historical counts', () => {
     assert.deepEqual(restoreMistakeCounts(undefined, new Set(words.map(w => w.id))), {})
     const stats = memoryStats(words, {}, ['a'])

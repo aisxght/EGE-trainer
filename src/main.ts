@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { createVuetify } from 'vuetify'
-import { VApp, VBtn, VCard, VIcon, VProgressLinear, VSelect, VTextField, VPagination, VDialog } from 'vuetify/components'
+import { VApp, VAutocomplete, VBtn, VCard, VIcon, VProgressLinear, VSelect, VTextField, VPagination, VDialog } from 'vuetify/components'
 import { Ripple } from 'vuetify/directives'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
@@ -13,7 +13,7 @@ import MemoryPage from './components/MemoryPage.vue'
 import LibraryPage from './components/LibraryPage.vue'
 import SpellingPage from './components/SpellingPage.vue'
 
-const components = { VApp, VBtn, VCard, VIcon, VProgressLinear, VSelect, VTextField, VPagination, VDialog }
+const components = { VApp, VAutocomplete, VBtn, VCard, VIcon, VProgressLinear, VSelect, VTextField, VPagination, VDialog }
 const directives = { Ripple }
 
 const router = createRouter({
