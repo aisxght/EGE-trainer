@@ -43,7 +43,7 @@ describe('trusted Markdown import', () => {
   })
   it('updates to the combined 2023–2026 source without losing previous words or stable IDs', () => {
     const name = 'ege_udarenia_2023_2026_obshchaya.md'
-    const value = compileSources([source(readFileSync(`data/${name}`, 'utf8'), name)])
+    const value = compileSources([source(readFileSync(`data/archive/${name}`, 'utf8'), name)])
     const previous = compileSources([source(readFileSync('data/archive/ege_udarenia_2025_2026.md', 'utf8'))])
     assert.equal(value.totalRows, 720)
     assert.equal(value.words.length, 209)
@@ -81,8 +81,34 @@ describe('trusted Markdown import', () => {
     assert.deepEqual(seal.sources.map(source => [source.year, source.variant]), [
       ['2023', '13'], ['2024', '13'], ['2026', '20'],
     ])
-    const variant13 = parseSource(readFileSync(`data/${name}`, 'utf8'), name).entries.filter(entry => entry.source.year === '2026' && entry.source.variant === '13')
+    const variant13 = parseSource(readFileSync(`data/archive/${name}`, 'utf8'), name).entries.filter(entry => entry.source.year === '2026' && entry.source.variant === '13')
     assert.deepEqual(variant13.map(entry => entry.source.given), ['катАлог', 'запЁртый (дом)', 'кашлянУть', 'вручАт', 'звонИт'])
+  })
+  it('imports 2023–2027 without losing corrected words, contexts or progress IDs', () => {
+    const name = 'ege_udarenia_2023_2027_ispravleno.md'
+    const text = readFileSync(`data/${name}`, 'utf8')
+    const value = compileSources([source(text, name)])
+    const previous = compileSources([source(readFileSync('data/archive/ege_udarenia_2023_2026_obshchaya.md', 'utf8'))])
+    assert.equal(value.totalRows, 900)
+    assert.equal(value.words.length, 214)
+    assert.deepEqual(value.conflicts, [])
+    for (const word of previous.words) {
+      const updated = value.words.find(w => w.id === word.id)
+      assert.ok(updated, `Lost progress ID: ${word.correct}`)
+      assert.equal(updated.correct, word.correct)
+      assert.equal(updated.context, word.context)
+    }
+    const entries = parseSource(text, name).entries
+    for (const year of ['2023', '2024', '2025', '2026', '2027']) {
+      const rows = entries.filter(entry => entry.source.year === year)
+      assert.equal(rows.length, 180)
+      assert.equal(new Set(rows.map(entry => entry.source.variant)).size, 36)
+    }
+    const year2027 = entries.filter(entry => entry.source.year === '2027')
+    assert.equal(new Set(year2027.map(entry => `${entry.word}|${entry.context}`)).size, 125)
+    assert.ok(year2027.filter(entry => entry.word === 'цепочка').every(entry => entry.correct === 'цепОчка'))
+    assert.ok(year2027.filter(entry => entry.word === 'кремень').every(entry => entry.correct === 'кремЕнь'))
+    assert.ok(entries.filter(entry => entry.word === 'послала').every(entry => entry.correct === 'послАла'))
     const client = JSON.parse(readFileSync('src/words.json', 'utf8'))
     const server = JSON.parse(readFileSync('server/words.json', 'utf8'))
     assert.deepEqual(client, value)

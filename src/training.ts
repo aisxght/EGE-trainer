@@ -1,8 +1,23 @@
 export type TrainingMode = 'all' | 'mistakes' | 'frequent' | 'rare'
-export type TrainingSize = number | 'all' | 'endless'
+export type TrainingSize = number | 'all' | 'endless' | 'year2027'
 interface TrainingWord {
   id: string
+  correct?: string
   sources: { file: string; line: number; year: string; variant: string }[]
+}
+
+// Keep different stresses of homonyms, but do not repeat the same stressed
+// word just because a source adds a preposition or another context example.
+export function trainingYearWords<T extends TrainingWord>(words: T[], year: string): T[] {
+  const seen = new Set<string>()
+  return words.flatMap(word => {
+    const sources = word.sources.filter(source => source.year === year)
+    if (!sources.length) return []
+    const key = word.correct?.split(/\s+/).find(token => /[АЕЁИОУЫЭЮЯ]/.test(token)) ?? word.id
+    if (seen.has(key)) return []
+    seen.add(key)
+    return [{ ...word, sources }]
+  })
 }
 
 export function frequency(word: TrainingWord): number {
@@ -23,6 +38,7 @@ export function randomRound<T extends { id: string }>(words: T[], previousId?: s
 }
 
 export function createRound<T extends TrainingWord>(words: T[], mode: TrainingMode, size: TrainingSize, mistakes: string[] = [], random = Math.random): T[] {
+  if (size === 'year2027') return randomRound(trainingYearWords(words, '2027'), undefined, random)
   if (size === 'all' || size === 'endless') return randomRound(words, undefined, random)
   let pool = randomRound(mode === 'mistakes' ? words.filter(word => mistakes.includes(word.id)) : words, undefined, random)
   if (mode === 'frequent' || mode === 'rare') {

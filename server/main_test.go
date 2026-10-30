@@ -13,7 +13,7 @@ func TestWordsEndpoint(t *testing.T) {
 	if w.Code != 200 { t.Fatalf("status = %d", w.Code) }
 	var data struct { Words []struct { Word string `json:"word"` } `json:"words"`; TotalRows int `json:"totalRows"` }
 	if err := json.Unmarshal(w.Body.Bytes(), &data); err != nil { t.Fatal(err) }
-	if len(data.Words) != 209 || data.TotalRows != 720 { t.Fatalf("unexpected dataset: %d words, %d rows", len(data.Words), data.TotalRows) }
+	if len(data.Words) != 214 || data.TotalRows != 900 { t.Fatalf("unexpected dataset: %d words, %d rows", len(data.Words), data.TotalRows) }
 	foundCorrected := false
 	for _, word := range data.Words {
 		if word.Word == "запломбировать" { foundCorrected = true }
